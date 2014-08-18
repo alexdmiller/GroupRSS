@@ -6,6 +6,13 @@
     {% for feed in feeds %}
     <div>
       {{feed.name}}
+      <ul>
+        {% for post in feed.posts %}
+          <li>
+            {{post.title}}
+          </li>
+        {% endfor %}
+      </ul>
     </div>
     {% endfor %}
 

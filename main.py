@@ -22,9 +22,8 @@ sys.path.insert(0, 'libs')
 import os
 import webapp2
 import jinja2
-import time
 from reader import Reader
-from google.appengine.ext import db
+from models import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -49,38 +48,17 @@ class FeedHandler(webapp2.RequestHandler):
 
   def post(self):
     feed_url = self.request.get('url')
-    feed = Feed(url=feed_url)
-    feed.put()
+    feed = Feed.get_by_key_name(feed_url)
+    if feed is None:
+      feed = Feed(key_name=feed_url,
+                  url=feed_url)
+      feed.put()
 
-    reader = Reader(feed)
-    reader.saveMetadata()
-    reader.savePosts()
+      reader = Reader(feed)
+      reader.saveMetadata()
+      reader.savePosts()
 
     self.redirect('/feed')
-
-
-# Models
-
-class Feed(db.Model):
-  # ID
-  url = db.StringProperty()
-  name = db.StringProperty()
-  last_checked = db.DateProperty()
-
-class Post(db.Model):
-  # ID of the feed that contains the post
-  owner_feed_id = db.StringProperty()
-  title = db.StringProperty()
-  content = db.StringProperty()
-
-class Group(db.Model):
-  name = db.StringProperty()
-  description = db.StringProperty()
-
-class GroupPost(db.Model):
-  owner_group_id = db.StringProperty()
-  post_id = db.StringProperty()
-
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
