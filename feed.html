@@ -2,7 +2,18 @@
 {% autoescape true %}
 <html>
   <body>
-    {{ test }}
+    <h1>Feeds</h1>
+    {% for feed in feeds %}
+    <div>
+      {{feed.name}}
+    </div>
+    {% endfor %}
+
+    <h2>Add Feed</h2>
+    <form action="/feed" method="post">
+      <div><input type="text" name="url"></div>
+      <div><input type="submit" value="Add Feed"></div>
+    </form>
   </body>
 </html>
 {% endautoescape %}

@@ -14,10 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+
+import sys
+sys.path.insert(0, 'libs')
+
 import os
-import urllib
 import webapp2
 import jinja2
+import time
+from reader import Reader
 from google.appengine.ext import db
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -25,31 +31,39 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
+
+# Handlers
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('Hello world!')
 
 class FeedHandler(webapp2.RequestHandler):
   def get(self):
+    feeds_query = Feed.all()
     template_values = {
-      'test': 'HELLO WORLD'
+      'feeds': feeds_query.run()
     }
     template = JINJA_ENVIRONMENT.get_template('feed.html')
     self.response.write(template.render(template_values))
 
   def post(self):
-    feed_url = self.request.get('feed_url')
-    feed = Feed(key_name=feed_url)
+    feed_url = self.request.get('url')
+    feed = Feed(url=feed_url)
     feed.put()
 
-    template_values = {
-      'test': 'HELLO WORLD'
-    }
-    template = JINJA_ENVIRONMENT.get_template('feed.html')
-    self.response.write(template.render(template_values))
+    reader = Reader(feed)
+    reader.saveMetadata()
+    reader.savePosts()
+
+    self.redirect('/feed')
+
+
+# Models
 
 class Feed(db.Model):
   # ID
+  url = db.StringProperty()
   name = db.StringProperty()
   last_checked = db.DateProperty()
 
@@ -66,6 +80,7 @@ class Group(db.Model):
 class GroupPost(db.Model):
   owner_group_id = db.StringProperty()
   post_id = db.StringProperty()
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
