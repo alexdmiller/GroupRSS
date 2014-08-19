@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <body>
+    <h1>Feeds</h1>
+    {% for feed in feeds %}
+    <div>
+      {{feed.name}}
+      <ul>
+        {% for post in feed.posts %}
+          <li>
+            {{post.title}}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+
+    <h2>Add Feed</h2>
+    <form action="/feeds" method="post">
+      <div><input type="text" name="url"></div>
+      <div><input type="submit" value="Add Feed"></div>
+    </form>
+  </body>
+</html>
+{% endautoescape %}
