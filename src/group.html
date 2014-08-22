@@ -28,7 +28,7 @@
 
     <div class="feed-info">      
       <div class="feed-list">
-        {% for feed in feeds %}
+        {% for feed in group.getFeeds() %}
         <div>
           {{feed.name}}
         </div>

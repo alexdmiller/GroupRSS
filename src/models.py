@@ -17,6 +17,9 @@ class Group(db.Model):
   description = db.StringProperty()
   feed_keys = db.ListProperty(db.Key)
 
+  def getFeeds(self):
+    return Feed.get(self.feed_keys)
+
 # figure out when to create and save group post models (probably when group feed
 # is requested? or when post is created?)
 class GroupPost(db.Model):

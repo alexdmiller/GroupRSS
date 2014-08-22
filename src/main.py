@@ -30,37 +30,6 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True)
 
 
-# Handlers
-
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
-
-
-class FeedsHandler(webapp2.RequestHandler):
-  def get(self):
-    feeds_query = Feed.all()
-    template_values = {
-      'feeds': feeds_query.run()
-    }
-    template = JINJA_ENVIRONMENT.get_template('feeds.html')
-    self.response.write(template.render(template_values))
-
-  def post(self):
-    feed_url = self.request.get('url')
-    feed = Feed.get_by_key_name(feed_url)
-    if feed is None:
-      feed = Feed(key_name=feed_url,
-                  url=feed_url)
-      feed.put()
-
-      reader = Reader(feed)
-      reader.saveMetadata()
-      reader.savePosts()
-
-    self.redirect('/feeds')
-
-
 class GroupsHandler(webapp2.RequestHandler):
   def get(self):
     groups_query = Group.all()
@@ -122,8 +91,6 @@ class GroupHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    Route('/', MainHandler),
-    Route('/feeds', FeedsHandler),
     Route('/groups', GroupsHandler),
     Route(r'/group/<group_key_name>', handler=GroupHandler,
         handler_method='get'),
