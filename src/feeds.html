@@ -1,26 +1,52 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
-  <body>
-    <h1>Feeds</h1>
-    {% for feed in feeds %}
-    <div>
-      {{feed.name}}
-      <ul>
-        {% for post in feed.posts %}
-          <li>
-            {{post.title}}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endfor %}
+  <head>
+    <style>
+    body {
+      font-family: helvetica;
+    }
 
-    <h2>Add Feed</h2>
-    <form action="/feeds" method="post">
-      <div><input type="text" name="url"></div>
-      <div><input type="submit" value="Add Feed"></div>
-    </form>
+    .feed-info {
+      background-color: #CCC;
+      padding: 20px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    </style>
+  </head>
+  <body>
+    <h1>
+      {% block title %}
+        Feeds
+      {% endblock %}
+    </h1>
+
+    <div class="content">
+      {% block content %}
+        No content.
+      {% endblock %}
+    </div>
+
+    <div class="feed-info">      
+      <div class="feed-list">
+        {% for feed in feeds %}
+        <div>
+          {{feed.name}}
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="add-feed">
+        <form action="/feeds" method="post">
+          <div><input type="text" name="url"></div>
+          <div><input type="submit" value="Add Feed"></div>
+        </form>
+      </div>
+    </div>
   </body>
 </html>
 {% endautoescape %}

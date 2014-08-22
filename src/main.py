@@ -88,20 +88,45 @@ class GroupsHandler(webapp2.RequestHandler):
 
 
 class GroupHandler(webapp2.RequestHandler):
-  def get(self, group_key):
-    group = Group.get_by_key_name(group_key);
+  def get(self, group_key_name):
+    group = Group.get_by_key_name(group_key_name);
     if group is None:
       self.response.write('No group by that name exists.')
     else:
       template_values = {
+        'group_key_name': group_key_name,
         'group': group
       }
       template = JINJA_ENVIRONMENT.get_template('group.html')
       self.response.write(template.render(template_values))
 
+  def add_feed_to_group(self, group_key_name):
+    group = Group.get_by_key_name(group_key_name);
+    if group is None:
+      self.response.write('No group by that name exists.')
+    else:
+      feed_url = self.request.get('url')
+      feed = Feed.get_by_key_name(feed_url)
+      if feed is None:
+        feed = Feed(key_name=feed_url,
+                    url=feed_url)
+        feed.put()
+
+        reader = Reader(feed)
+        reader.saveMetadata()
+        reader.savePosts()
+      group.feed_keys.append(feed.key())
+      group.put()
+
+      self.redirect('/group/' + group_key_name)
+
+
 app = webapp2.WSGIApplication([
     Route('/', MainHandler),
     Route('/feeds', FeedsHandler),
     Route('/groups', GroupsHandler),
-    Route(r'/group/<group_key>', GroupHandler)
+    Route(r'/group/<group_key_name>', handler=GroupHandler,
+        handler_method='get'),
+    Route(r'/group/<group_key_name>/add_feed', handler=GroupHandler,
+        handler_method='add_feed_to_group'),
 ], debug=True)

@@ -15,7 +15,7 @@ class Post(db.Model):
 class Group(db.Model):
   name = db.StringProperty()
   description = db.StringProperty()
-  feeds = db.ListProperty(db.Key)
+  feed_keys = db.ListProperty(db.Key)
 
 # figure out when to create and save group post models (probably when group feed
 # is requested? or when post is created?)
