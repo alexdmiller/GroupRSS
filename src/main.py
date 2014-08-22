@@ -18,10 +18,11 @@
 import os
 import webapp2
 import jinja2
+import time
 from reader import Reader
 from models import *
 from slugify import slugify
-import time
+from webapp2 import Route
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -34,6 +35,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('Hello world!')
+
 
 class FeedsHandler(webapp2.RequestHandler):
   def get(self):
@@ -58,6 +60,7 @@ class FeedsHandler(webapp2.RequestHandler):
 
     self.redirect('/feeds')
 
+
 class GroupsHandler(webapp2.RequestHandler):
   def get(self):
     groups_query = Group.all()
@@ -71,7 +74,7 @@ class GroupsHandler(webapp2.RequestHandler):
     name = self.request.get('name')
     description = self.request.get('description')
     # TODO: use UniqueSlugify to allow duplicate names
-    key_name = slugify(name, to_lower=True)
+    key_name = slugify(name)
     group = Group.get_by_key_name(key_name)
     if group is None:
       group = Group(key_name=key_name,
@@ -83,8 +86,22 @@ class GroupsHandler(webapp2.RequestHandler):
     else:
       self.response.write('That group name is already taken.')
 
+
+class GroupHandler(webapp2.RequestHandler):
+  def get(self, group_key):
+    group = Group.get_by_key_name(group_key);
+    if group is None:
+      self.response.write('No group by that name exists.')
+    else:
+      template_values = {
+        'group': group
+      }
+      template = JINJA_ENVIRONMENT.get_template('group.html')
+      self.response.write(template.render(template_values))
+
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
-    ('/feeds', FeedsHandler),
-    ('/groups', GroupsHandler)
+    Route('/', MainHandler),
+    Route('/feeds', FeedsHandler),
+    Route('/groups', GroupsHandler),
+    Route(r'/group/<group_key>', GroupHandler)
 ], debug=True)
