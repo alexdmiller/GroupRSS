@@ -84,7 +84,7 @@ class GroupHandler(webapp2.RequestHandler):
         reader = Reader(feed)
         reader.saveMetadata()
         reader.savePosts()
-      GroupFeed(group=group, feed=feed)
+      GroupFeed(group=group, feed=feed).put()
 
       self.redirect('/group/' + group_key_name)
 

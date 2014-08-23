@@ -28,9 +28,9 @@
 
     <div class="feed-info">      
       <div class="feed-list">
-        {% for feed in group.getFeeds() %}
+        {% for group_feed in group.group_feeds %}
         <div>
-          {{feed.name}}
+          {{group_feed.feed.name}}
         </div>
         {% endfor %}
       </div>

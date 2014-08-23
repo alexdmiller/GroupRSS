@@ -11,13 +11,9 @@ class Post(db.Model):
   title = db.StringProperty()
   content = db.StringProperty()
 
-# TODO: create a group
 class Group(db.Model):
   name = db.StringProperty()
   description = db.StringProperty()
-
-  def getFeeds(self):
-    return GroupFeed.gql('WHERE group = :1', self.key())
 
 class GroupFeed(db.Model):
   group = db.ReferenceProperty(Group, collection_name='group_feeds')
