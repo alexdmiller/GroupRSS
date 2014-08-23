@@ -7,20 +7,23 @@ class Feed(db.Model):
 
 class Post(db.Model):
   feed = db.ReferenceProperty(Feed, collection_name='posts')  
-  link = db.StringProperty()
+  url = db.StringProperty()
   title = db.StringProperty()
   content = db.StringProperty()
+  timestamp = db.DateTimeProperty()
 
 class Group(db.Model):
   name = db.StringProperty()
   description = db.StringProperty()
 
 class GroupFeed(db.Model):
-  group = db.ReferenceProperty(Group, collection_name='group_feeds')
-  feed = db.ReferenceProperty(Feed, collection_name='feed_groups')
+  group = db.ReferenceProperty(Group, collection_name='group_feeds',
+      required=True)
+  feed = db.ReferenceProperty(Feed, collection_name='feed_groups',
+      required=True)
 
-# figure out when to create and save group post models (probably when group feed
-# is requested? or when post is created?)
 class GroupPost(db.Model):
-  group = db.ReferenceProperty(Group, collection_name='group_posts')
-  post = db.ReferenceProperty(Post, collection_name='post_groups')
+  group = db.ReferenceProperty(Group, collection_name='group_posts',
+      required=True)
+  post = db.ReferenceProperty(Post, collection_name='post_groups',
+      required=True)

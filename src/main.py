@@ -64,7 +64,8 @@ class GroupHandler(webapp2.RequestHandler):
     else:
       template_values = {
         'group_key_name': group_key_name,
-        'group': group
+        'group': group,
+        'group_posts': group.group_posts
       }
       template = JINJA_ENVIRONMENT.get_template('group.html')
       self.response.write(template.render(template_values))
@@ -80,11 +81,14 @@ class GroupHandler(webapp2.RequestHandler):
         feed = Feed(key_name=feed_url,
                     url=feed_url)
         feed.put()
-
         reader = Reader(feed)
         reader.saveMetadata()
         reader.savePosts()
+
       GroupFeed(group=group, feed=feed).put()
+      # add currently available posts to group
+      for post in feed.posts:
+        GroupPost(group=group, post=post).put()
 
       self.redirect('/group/' + group_key_name)
 
