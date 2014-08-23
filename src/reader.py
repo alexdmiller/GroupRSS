@@ -31,7 +31,6 @@ class Reader:
         post = Post.get_by_key_name(entry.link)
         if post is None:
           timestamp = datetime.fromtimestamp(mktime(entry.published_parsed))
-          print timestamp
           post = Post(key_name = entry.link,
                       feed = self.feedModel,
                       url = entry.link,
@@ -45,4 +44,4 @@ class Reader:
 
   def createGroupPost(self, post, feed):
     for feed_group in feed.feed_groups:
-      GroupPost(group=feed_group.group, post=post).put()
+      GroupPost.from_post(group=feed_group.group, post=post).put()

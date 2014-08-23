@@ -65,7 +65,7 @@ class GroupHandler(webapp2.RequestHandler):
       template_values = {
         'group_key_name': group_key_name,
         'group': group,
-        'group_posts': group.group_posts
+        'group_posts': group.group_posts.order('-timestamp')
       }
       template = JINJA_ENVIRONMENT.get_template('group.html')
       self.response.write(template.render(template_values))
@@ -88,7 +88,7 @@ class GroupHandler(webapp2.RequestHandler):
       GroupFeed(group=group, feed=feed).put()
       # add currently available posts to group
       for post in feed.posts:
-        GroupPost(group=group, post=post).put()
+        GroupPost.from_post(group=group, post=post).put()
 
       self.redirect('/group/' + group_key_name)
 

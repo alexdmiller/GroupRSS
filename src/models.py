@@ -27,3 +27,8 @@ class GroupPost(db.Model):
       required=True)
   post = db.ReferenceProperty(Post, collection_name='post_groups',
       required=True)
+  timestamp = db.DateTimeProperty()
+
+  @staticmethod
+  def from_post(group, post):
+    return GroupPost(group=group, post=post, timestamp=post.timestamp)
