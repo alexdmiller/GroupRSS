@@ -85,10 +85,14 @@ class GroupHandler(webapp2.RequestHandler):
         reader.saveMetadata()
         reader.savePosts()
 
-      GroupFeed(group=group, feed=feed).put()
-      # add currently available posts to group
-      for post in feed.posts:
-        GroupPost.from_post(group=group, post=post).put()
+      group_feed = GroupFeed.gql('WHERE group = :1 AND feed = :2', group.key(), feed.key()).get()
+      if group_feed is None:
+        print "ADDING GROUP FEED"
+        group_feed = GroupFeed(group=group, feed=feed)
+        group_feed.put()
+        # add currently available posts to group
+        for post in feed.posts:
+          GroupPost.from_post(group=group, post=post).put()
 
       self.redirect('/group/' + group_key_name)
 
