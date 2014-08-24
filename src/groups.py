@@ -31,7 +31,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class GroupsHandler(webapp2.RequestHandler):
-  def get(self):
+  def get_group_list(self):
     groups_query = Group.all()
     template_values = {
       'groups': groups_query.run()
@@ -39,7 +39,7 @@ class GroupsHandler(webapp2.RequestHandler):
     template = JINJA_ENVIRONMENT.get_template('groups.html')
     self.response.write(template.render(template_values))
 
-  def post(self):
+  def create_group(self):
     name = self.request.get('name')
     description = self.request.get('description')
     # TODO: use UniqueSlugify to allow duplicate names
@@ -51,13 +51,11 @@ class GroupsHandler(webapp2.RequestHandler):
                     description=description)
       group.put()
       time.sleep(1)
-      self.redirect('/group/' + key_name)
+      self.redirect('/groups/' + key_name)
     else:
       self.response.write('That group name is already taken.')
-
-
-class GroupHandler(webapp2.RequestHandler):
-  def get(self, group_key_name):
+  
+  def get_group(self, group_key_name):
     group = Group.get_by_key_name(group_key_name);
     if group is None:
       self.response.write('No group by that name exists.')
@@ -94,13 +92,16 @@ class GroupHandler(webapp2.RequestHandler):
         for post in feed.posts:
           GroupPost.from_post(group=group, post=post).put()
 
-      self.redirect('/group/' + group_key_name)
+      self.redirect('/groups/' + group_key_name)
 
 
 app = webapp2.WSGIApplication([
-    Route('/groups', GroupsHandler),
-    Route(r'/group/<group_key_name>', handler=GroupHandler,
-        handler_method='get'),
-    Route(r'/group/<group_key_name>/add_feed', handler=GroupHandler,
+    Route(r'/groups', handler=GroupsHandler, handler_method='get_group_list',
+        methods=['GET']),
+    Route(r'/groups', handler=GroupsHandler, handler_method='create_group',
+        methods=['POST']),
+    Route(r'/groups/<group_key_name>', handler=GroupsHandler,
+        handler_method='get_group'),
+    Route(r'/groups/<group_key_name>/add_feed', handler=GroupsHandler,
         handler_method='add_feed_to_group'),
 ], debug=True)
