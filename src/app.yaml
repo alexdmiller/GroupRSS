@@ -11,6 +11,7 @@ handlers:
 
 - url: /groups.*
   script: groups.app
+  login: required
 
 libraries:
 - name: webapp2
