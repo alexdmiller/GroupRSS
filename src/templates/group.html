@@ -1,0 +1,33 @@
+{% extends "templates/base.html" %}
+{% block content %}
+  <h2>
+    {{group.name}} <span class="group-description">{{group.description}}</span>
+  </h2>
+
+  <div class="content">
+    {% for group_post in group_posts %}
+      <div class="post">
+        <a class="article-link" href="{{group_post.post.url}}">{{group_post.post.title}}<a>
+        <a class="feed-link" href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a>
+        <span class="post-date">{{group_post.post.timestamp}}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="feed-info">      
+    <div class="feed-list">
+      {% for group_feed in group.group_feeds %}
+      <div>
+        {{group_feed.feed.name}}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="add-feed">
+      <form action="/groups/{{group_key_name}}/add_feed" method="post">
+        <div><input type="text" name="url"></div>
+        <div><input type="submit" value="Add Feed"></div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

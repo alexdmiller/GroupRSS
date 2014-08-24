@@ -36,7 +36,7 @@ class GroupsHandler(webapp2.RequestHandler):
     template_values = {
       'groups': groups_query.run()
     }
-    template = JINJA_ENVIRONMENT.get_template('groups.html')
+    template = JINJA_ENVIRONMENT.get_template('templates/groups.html')
     self.response.write(template.render(template_values))
 
   def create_group(self):
@@ -65,7 +65,7 @@ class GroupsHandler(webapp2.RequestHandler):
         'group': group,
         'group_posts': group.group_posts.order('-timestamp')
       }
-      template = JINJA_ENVIRONMENT.get_template('group.html')
+      template = JINJA_ENVIRONMENT.get_template('templates/group.html')
       self.response.write(template.render(template_values))
 
   def add_feed_to_group(self, group_key_name):
