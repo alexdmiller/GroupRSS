@@ -25,3 +25,8 @@ indexes:
   - name: group
   - name: timestamp
     direction: desc
+
+- kind: GroupPostComment
+  properties:
+  - name: group_post
+  - name: timestamp

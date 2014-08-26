@@ -9,7 +9,7 @@ class Post(db.Model):
   feed = db.ReferenceProperty(Feed, collection_name='posts')  
   url = db.StringProperty()
   title = db.StringProperty()
-  content = db.StringProperty()
+  content = db.TextProperty()
   timestamp = db.DateTimeProperty()
 
 class Group(db.Model):
@@ -35,5 +35,6 @@ class GroupPost(db.Model):
 
 class GroupPostComment(db.Model):
   group_post = db.ReferenceProperty(GroupPost, collection_name='comments')
-  content = db.StringProperty()
+  content = db.TextProperty()
   user = db.UserProperty()
+  timestamp = db.DateTimeProperty(auto_now_add=True)

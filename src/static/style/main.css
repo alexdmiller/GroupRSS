@@ -69,5 +69,10 @@ a.feed-link, .post-date {
 
 .comment-attribution {
   font-size: 11px;
+  color: #666;
+}
+
+.comment-date {
   color: #999;
+  margin-left: 10px;
 }

@@ -37,10 +37,13 @@
 
 {% macro post_comments(group_post) -%}
   <div class="post-comments">
-    {% for comment in group_post.comments %}
+    {% for comment in group_post.comments.order('timestamp') %}
       <div class="comment">
         <p>{{comment.content}}</p>
-        <div class="comment-attribution">{{comment.user.nickname()}}</div>
+        <div class="comment-attribution">
+          {{comment.user.nickname()}}
+          <span class="comment-date">{{comment.timestamp}}</span>
+        </div>
       </div>
     {% endfor %}
     <div>
