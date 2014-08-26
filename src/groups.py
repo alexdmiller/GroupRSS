@@ -94,7 +94,6 @@ class GroupsHandler(webapp2.RequestHandler):
 
       self.redirect('/groups/' + group_key_name)
 
-
 app = webapp2.WSGIApplication([
     Route(r'/groups', handler=GroupsHandler, handler_method='get_group_list',
         methods=['GET']),

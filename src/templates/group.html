@@ -7,9 +7,12 @@
   <div class="content">
     {% for group_post in group_posts %}
       <div class="post">
-        <a class="article-link" href="{{group_post.post.url}}">{{group_post.post.title}}<a>
-        <a class="feed-link" href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a>
-        <span class="post-date">{{group_post.post.timestamp}}</span>
+        <div class="post-header">
+          <a class="article-link" href="{{group_post.post.url}}">{{group_post.post.title}}<a>
+          <a class="feed-link" href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a>
+          <span class="post-date">{{group_post.post.timestamp}}</span>
+        </div>
+        {{ post_comments(group_post) }}
       </div>
     {% endfor %}
   </div>
@@ -31,3 +34,20 @@
     </div>
   </div>
 {% endblock %}
+
+{% macro post_comments(group_post) -%}
+  <div class="post-comments">
+    {% for comment in group_post.comments %}
+      <div class="comment">
+        <p>{{comment.content}}</p>
+        <div class="comment-attribution">{{comment.user.nickname()}}</div>
+      </div>
+    {% endfor %}
+    <div>
+      <form action="/posts/{{group_post.key()}}/comments" method="post">
+        <div><textarea name="content"></textarea></div>
+        <div><input type="submit" value="Post Comment"></div>
+      </form>
+    </div>
+  </div>
+{%- endmacro %}

@@ -32,3 +32,8 @@ class GroupPost(db.Model):
   @staticmethod
   def from_post(group, post):
     return GroupPost(group=group, post=post, timestamp=post.timestamp)
+
+class GroupPostComment(db.Model):
+  group_post = db.ReferenceProperty(GroupPost, collection_name='comments')
+  content = db.StringProperty()
+  user = db.UserProperty()
