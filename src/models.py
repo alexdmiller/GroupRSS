@@ -9,7 +9,7 @@ class Post(db.Model):
   feed = db.ReferenceProperty(Feed, collection_name='posts')  
   url = db.StringProperty()
   title = db.StringProperty()
-  content = db.TextProperty()
+  summary = db.TextProperty()
   timestamp = db.DateTimeProperty()
 
 class Group(db.Model):

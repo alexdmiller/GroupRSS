@@ -3,16 +3,22 @@
 <html>
   <head>
     <title>Group RSS</title>
-    <link rel="stylesheet" type="text/css" href="/static/style/main.css">
+    <link rel="stylesheet" href="/static/style/bootstrap.min.css" >
+    <link rel="stylesheet" href="/static/style/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <div class="nav">
-      <h1>Group RSS</h1>
+    <div>
+      <div class="top-header">
+        <h1>Group RSS</h1>
+      </div>
+      <div class="container-fluid">
+        {% block content %}
+        {% endblock %}
+      </div>
     </div>
-    <div class="container">
-      {% block content %}
-      {% endblock %}
-    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
   </body>
 </html>
 {% endautoescape %}

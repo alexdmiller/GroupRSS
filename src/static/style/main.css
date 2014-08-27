@@ -10,13 +10,17 @@ h1 {
   padding: 10px;
 }
 
-.nav {
-  background-color: #B7BFC4;
+.top-header {
+  background-color: #BFE7FF;
+}
+
+.main-content {
+  
 }
 
 h2 {
   font-size: 20px;
-  background-color: #E4EBF0;
+  background-color: #DCF0FC;
   margin: 0;
   padding: 10px;
 }
@@ -28,33 +32,61 @@ h2 .group-description {
   font-weight: normal;
 }
 
-.feed-info {
-  background-color: #CCC;
-  padding: 20px;
-}
-
-.content {
-  margin: 10px 20px 0 20px;
-}
+/* Posts */
 
 .post {
-  margin-bottom: 10px;
+  background-color: #F2F2F2;
+  padding: 4px;
+  border-top: solid 1px #999;
 }
 
-.post a {
-  font-size: 16px;
+.post-header {
+  border-bottom: solid 1px #CCC;
+  padding: 3px;
+}
+
+.post-header div {
+  display: inline-block;
+}
+
+.post-header a {
   text-decoration: none;
 }
 
-a.feed-link, .post-date {
+.post-header .article-link a {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.post-header .feed-link, .post-date {
   font-size: 12px;
+}
+
+.feed-link {
+  width: 100px;
   margin-left: 10px;
-  padding: 2px;
+}
+
+.feed-link a {
+  color: #333;
 }
 
 .post-date {
   color: #999;
+  float: right;
 }
+
+.post-info {
+  float: right;
+}
+
+.post-content {
+  font-size: 14px;
+  background-color: #FFF;
+  padding: 10px;
+}
+
+/* Comments */
 
 .post-comments {
   margin-left: 20px;

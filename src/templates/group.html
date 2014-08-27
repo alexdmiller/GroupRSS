@@ -1,36 +1,52 @@
 {% extends "templates/base.html" %}
 {% block content %}
-  <h2>
-    {{group.name}} <span class="group-description">{{group.description}}</span>
-  </h2>
-
-  <div class="content">
-    {% for group_post in group_posts %}
-      <div class="post">
-        <div class="post-header">
-          <a class="article-link" href="{{group_post.post.url}}">{{group_post.post.title}}<a>
-          <a class="feed-link" href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a>
-          <span class="post-date">{{group_post.post.timestamp}}</span>
-        </div>
-        {{ post_comments(group_post) }}
-      </div>
-    {% endfor %}
+  <div class="row">
+    <h2 class="col-md-12">{{group.name}} <span class="group-description">{{group.description}}</span></h2>
   </div>
 
-  <div class="feed-info">      
-    <div class="feed-list">
-      {% for group_feed in group.group_feeds %}
-      <div>
-        {{group_feed.feed.name}}
+  <div class="row">
+    <div class="sidebar col-md-2">
+      <div class="feed-info">      
+        <div class="feed-list">
+          {% for group_feed in group.group_feeds %}
+          <div>
+            {{group_feed.feed.name}}
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="add-feed">
+          <form action="/groups/{{group_key_name}}/add_feed" method="post">
+            <div><input type="text" name="url"></div>
+            <div><input type="submit" value="Add Feed"></div>
+          </form>
+        </div>
       </div>
-      {% endfor %}
     </div>
 
-    <div class="add-feed">
-      <form action="/groups/{{group_key_name}}/add_feed" method="post">
-        <div><input type="text" name="url"></div>
-        <div><input type="submit" value="Add Feed"></div>
-      </form>
+    <div class="posts col-md-10">
+      {% for group_post in group_posts %}
+        <div class="post">
+          <div class="post-header">
+            <div class="feed-link">
+              <a href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a>
+            </div>
+            <div class="article-link">
+              <a href="{{group_post.post.url}}">{{group_post.post.title}}<a>
+            </div>
+            <div class="post-date">
+              {{group_post.post.timestamp}}
+            </div>
+            <div class="post-info">
+              1
+            </div>
+          </div>
+          <div class="post-content">
+            {{group_post.post.summary|safe}}
+          </div>
+          {{ post_comments(group_post) }}
+        </div>
+      {% endfor %}
     </div>
   </div>
 {% endblock %}

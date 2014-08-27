@@ -31,10 +31,11 @@ class Reader:
         post = Post.get_by_key_name(entry.link)
         if post is None:
           timestamp = datetime.fromtimestamp(mktime(entry.published_parsed))
-          post = Post(key_name = entry.link,
-                      feed = self.feedModel,
-                      url = entry.link,
-                      title = entry.title,
+          post = Post(key_name=entry.link,
+                      feed=self.feedModel,
+                      url=entry.link,
+                      title=entry.title,
+                      summary=entry.summary,
                       timestamp=timestamp)
           post.put()
           self.createGroupPost(post, self.feedModel);
