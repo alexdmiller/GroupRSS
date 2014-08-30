@@ -1,7 +1,10 @@
 from google.appengine.ext import db
 
 class Feed(db.Model):
+  # RSS url
   url = db.StringProperty()
+  # Actual site url
+  site_url = db.StringProperty()
   name = db.StringProperty()
   last_checked = db.DateTimeProperty()
 

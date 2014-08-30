@@ -14,7 +14,8 @@ class Reader:
 
   def saveMetadata(self):
     self.fetchFeed()
-    self.feedModel.name = self.parsedFeed.channel.title
+    self.feedModel.name = self.parsedFeed.feed.title
+    self.feedModel.site_url = self.parsedFeed.feed.link
     self.feedModel.put()
 
   def savePosts(self):

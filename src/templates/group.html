@@ -1,72 +1,76 @@
 {% extends "templates/base.html" %}
 {% block content %}
-  <div class="row">
+  <div class="group-header row">
     <h2 class="col-md-12">{{group.name}} <span class="group-description">{{group.description}}</span></h2>
   </div>
 
   <div class="row">
     <div class="sidebar col-md-2">
-      <div class="feed-info">      
-        <div class="feed-list">
-          {% for group_feed in group.group_feeds %}
-          <div>
-            {{group_feed.feed.name}}
+      <div class="feed-info panel panel-default">
+        <div class="panel-body">
+          <div class="feed-list">
+            {% for group_feed in group.group_feeds %}
+            <div>
+              <a href="{{group_feed.feed.site_url}}">{{group_feed.feed.name}}</a>
+            </div>
+            {% endfor %}
           </div>
-          {% endfor %}
-        </div>
-
-        <div class="add-feed">
-          <form action="/groups/{{group_key_name}}/add_feed" method="post">
-            <div><input type="text" name="url"></div>
-            <div><input type="submit" value="Add Feed"></div>
-          </form>
+          <div class="add-feed">
+            <form action="/groups/{{group_key_name}}/add_feed" method="post">
+              <div><input type="text" name="url"></div>
+              <div><input type="submit" value="Add Feed"></div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="posts col-md-10">
+    <div class="posts col-md-10 panel-group" id="post-accordion">
       {% for group_post in group_posts %}
-        <div class="post">
-          <div class="post-header">
-            <div class="feed-link">
+        <div class="post panel panel-default">
+          <a class="post-header-link" data-toggle="collapse" data-parent="#post-accordion" href="#collapse-{{group_post.key()}}">
+            <div class="panel-heading">
+              <div class="feed-name">
+                {{group_post.post.feed.name}}
+              </div>
+              <div class="post-info">
+                <span class="comment-num">1</span>
+                <span class="like-num">4</span>
+              </div>
+              <div class="post-title">
+                {{group_post.post.title}}
+              </div>
+            </div>
+          </a>
+          <div class="panel-body panel-collapse collapse" id="collapse-{{group_post.key()}}">
+            <div class="post-extra-info">
               <a href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a>
-            </div>
-            <div class="article-link">
-              <a href="{{group_post.post.url}}">{{group_post.post.title}}<a>
-            </div>
-            <div class="post-date">
+              <a href="{{group_post.post.url}}">{{group_post.post.url}}</a>
               {{group_post.post.timestamp}}
             </div>
-            <div class="post-info">
-              1
+
+            {{group_post.post.summary|safe}}
+
+            <div class="post-comments">
+              {% for comment in group_post.comments.order('timestamp') %}
+                <div class="comment">
+                  <p>{{comment.content}}</p>
+                  <div class="comment-attribution">
+                    {{comment.user.nickname()}}
+                    <span class="comment-date">{{comment.timestamp}}</span>
+                  </div>
+                </div>
+              {% endfor %}
+              <div>
+                <form action="/posts/{{group_post.key()}}/comments" method="post">
+                  <div><textarea name="content"></textarea></div>
+                  <div><input type="submit" value="Post Comment"></div>
+                </form>
+              </div>
             </div>
           </div>
-          <div class="post-content">
-            {{group_post.post.summary|safe}}
-          </div>
-          {{ post_comments(group_post) }}
         </div>
       {% endfor %}
     </div>
   </div>
 {% endblock %}
-
-{% macro post_comments(group_post) -%}
-  <div class="post-comments">
-    {% for comment in group_post.comments.order('timestamp') %}
-      <div class="comment">
-        <p>{{comment.content}}</p>
-        <div class="comment-attribution">
-          {{comment.user.nickname()}}
-          <span class="comment-date">{{comment.timestamp}}</span>
-        </div>
-      </div>
-    {% endfor %}
-    <div>
-      <form action="/posts/{{group_post.key()}}/comments" method="post">
-        <div><textarea name="content"></textarea></div>
-        <div><input type="submit" value="Post Comment"></div>
-      </form>
-    </div>
-  </div>
-{%- endmacro %}
