@@ -23,6 +23,7 @@ from reader import Reader
 from models import *
 from slugify import slugify
 from webapp2 import Route
+from google.appengine.api import users
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -63,7 +64,8 @@ class GroupsHandler(webapp2.RequestHandler):
       template_values = {
         'group_key_name': group_key_name,
         'group': group,
-        'group_posts': group.group_posts.order('-timestamp')
+        'group_posts': group.group_posts.order('-timestamp'),
+        'user': users.get_current_user()
       }
       template = JINJA_ENVIRONMENT.get_template('templates/group.html')
       self.response.write(template.render(template_values))
@@ -83,7 +85,8 @@ class GroupsHandler(webapp2.RequestHandler):
         reader.saveMetadata()
         reader.savePosts()
 
-      group_feed = GroupFeed.gql('WHERE group = :1 AND feed = :2', group.key(), feed.key()).get()
+      group_feed = GroupFeed.gql('WHERE group = :1 AND feed = :2', group.key(),
+          feed.key()).get()
       if group_feed is None:
         print "ADDING GROUP FEED"
         group_feed = GroupFeed(group=group, feed=feed)

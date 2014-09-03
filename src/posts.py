@@ -45,11 +45,22 @@ class GroupPostHandler(webapp2.RequestHandler):
       GroupPostComment(group_post=group_post, content=content, user=user).put()
       self.response.write('Comment posted.')
 
+  def mark_read(self, group_post_id):
+    group_post = GroupPost.get(group_post_id)
+    metadata = UserPostMetadata.get_from_post(users.get_current_user(),
+        group_post)
+    metadata.read = True
+    metadata.put()
+    self.response.write('Marekd as read: ' + metadata.key().id_or_name())
+
 app = webapp2.WSGIApplication([
     Route(r'/posts/<group_post_id>/comments',
         handler=GroupPostHandler, handler_method='get_comments',
         methods=['GET']),
     Route(r'/posts/<group_post_id>/comments',
         handler=GroupPostHandler, handler_method='create_comment',
+        methods=['POST']),
+    Route(r'/posts/<group_post_id>/read',
+        handler=GroupPostHandler, handler_method='mark_read',
         methods=['POST'])
 ], debug=True)

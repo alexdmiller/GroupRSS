@@ -25,37 +25,43 @@
       </div>
     </div>
 
-    <div class="posts col-md-10 panel-group" id="post-accordion">
+    <div class="posts col-md-8 panel-group" id="post-accordion">
       {% for group_post in group_posts %}
         <div class="post panel panel-default">
-          <a class="post-header-link" data-toggle="collapse" data-parent="#post-accordion" href="#collapse-{{group_post.key()}}">
-            <div class="panel-heading">
+            <div class="panel-heading unread" data-toggle="collapse" data-parent="#post-accordion" href="#collapse-{{group_post.key()}}">
               <div class="feed-name">
                 {{group_post.post.feed.name}}
               </div>
               <div class="post-info">
-                <span class="comment-num">1</span>
-                <span class="like-num">4</span>
+                <span class="badge comment-count">{{group_post.comments.count()}}</span>
               </div>
               <div class="post-title">
                 {{group_post.post.title}}
               </div>
+              <div>
+                {{group_post.user_metadata(user).read}}
+              </div>
             </div>
-          </a>
           <div class="panel-body panel-collapse collapse" id="collapse-{{group_post.key()}}">
             <div class="post-extra-info">
-              <a href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a>
-              <a href="{{group_post.post.url}}">{{group_post.post.url}}</a>
-              {{group_post.post.timestamp}}
+              <a href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a> •
+              <a href="{{group_post.post.url}}">{{group_post.post.url}}</a> •
+              <span class="date">{{group_post.post.timestamp}}</span>
             </div>
-
-            {{group_post.post.summary|safe}}
+            <form action="/posts/{{group_post.key()}}/read" method="post">
+              <input type="submit" class="btn btn-default" value="Mark">
+            </form>
+            <div class="post-content">
+              {{group_post.post.summary|safe}}
+            </div>
 
             <div class="post-comments">
               {% for comment in group_post.comments.order('timestamp') %}
-                <div class="comment">
-                  <p>{{comment.content}}</p>
-                  <div class="comment-attribution">
+                <div class="panel panel-default comment">
+                  <div class="panel-body">
+                    {{comment.content}}
+                  </div>
+                  <div class="panel-footer comment-attribution">
                     {{comment.user.nickname()}}
                     <span class="comment-date">{{comment.timestamp}}</span>
                   </div>
@@ -63,8 +69,8 @@
               {% endfor %}
               <div>
                 <form action="/posts/{{group_post.key()}}/comments" method="post">
-                  <div><textarea name="content"></textarea></div>
-                  <div><input type="submit" value="Post Comment"></div>
+                  <div><textarea name="content" class="form-control"></textarea></div>
+                  <div><input type="submit" class="btn btn-default" value="Post Comment"></div>
                 </form>
               </div>
             </div>

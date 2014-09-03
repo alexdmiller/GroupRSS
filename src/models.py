@@ -32,6 +32,9 @@ class GroupPost(db.Model):
       required=True)
   timestamp = db.DateTimeProperty()
 
+  def user_metadata(self, user):
+    return UserPostMetadata.get_from_post(user, self)
+
   @staticmethod
   def from_post(group, post):
     return GroupPost(group=group, post=post, timestamp=post.timestamp)
@@ -41,3 +44,12 @@ class GroupPostComment(db.Model):
   content = db.TextProperty()
   user = db.UserProperty()
   timestamp = db.DateTimeProperty(auto_now_add=True)
+
+class UserPostMetadata(db.Model):
+  timestamp = db.DateTimeProperty()
+  read = db.BooleanProperty()
+
+  @staticmethod
+  def get_from_post(user, group_post):
+    return UserPostMetadata.get_or_insert(str(user.user_id()) +
+        str(group_post.key().id_or_name()))
