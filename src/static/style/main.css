@@ -48,8 +48,13 @@ h1 {
   display: inline-block;
 }
 
-.panel-heading.unread {
-  background-color: #F7F7F7;
+.panel-heading {
+  background-color: #FFFFFF !important;
+}
+
+.unread .panel-heading {
+  background-color: #F0F0F0 !important;
+  font-weight: bold;
 }
 
 a.post-header-link {

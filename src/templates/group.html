@@ -27,21 +27,19 @@
 
     <div class="posts col-md-8 panel-group" id="post-accordion">
       {% for group_post in group_posts %}
-        <div class="post panel panel-default">
-            <div class="panel-heading unread" data-toggle="collapse" data-parent="#post-accordion" href="#collapse-{{group_post.key()}}">
-              <div class="feed-name">
-                {{group_post.post.feed.name}}
-              </div>
-              <div class="post-info">
-                <span class="badge comment-count">{{group_post.comments.count()}}</span>
-              </div>
-              <div class="post-title">
-                {{group_post.post.title}}
-              </div>
-              <div>
-                {{group_post.user_metadata(user).read}}
-              </div>
+        <div class="post panel panel-default {{'unread' if not group_post.user_metadata(user).read}}">
+          <div class="panel-heading"
+              data-toggle="collapse" data-parent="#post-accordion" href="#collapse-{{group_post.key()}}">
+            <div class="feed-name">
+              {{group_post.post.feed.name}}
             </div>
+            <div class="post-info">
+              <span class="badge comment-count">{{group_post.comments.count()}}</span>
+            </div>
+            <div class="post-title">
+              {{group_post.post.title}}
+            </div>
+          </div>
           <div class="panel-body panel-collapse collapse" id="collapse-{{group_post.key()}}">
             <div class="post-extra-info">
               <a href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a> •
