@@ -29,7 +29,7 @@
       {% for group_post in group_posts %}
         <div class="post panel panel-default {{'unread' if not group_post.user_metadata(user).read}}">
           <div class="panel-heading"
-              data-toggle="collapse" data-parent="#post-accordion" href="#collapse-{{group_post.key()}}">
+              data-toggle="collapse" data-parent="#post-accordion" href="#{{group_post.key()}}">
             <div class="feed-name">
               {{group_post.post.feed.name}}
             </div>
@@ -40,15 +40,12 @@
               {{group_post.post.title}}
             </div>
           </div>
-          <div class="panel-body panel-collapse collapse" id="collapse-{{group_post.key()}}">
+          <div class="panel-body panel-collapse collapse" id="{{group_post.key()}}">
             <div class="post-extra-info">
               <a href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a> •
               <a href="{{group_post.post.url}}">{{group_post.post.url}}</a> •
               <span class="date">{{group_post.post.timestamp}}</span>
             </div>
-            <form action="/posts/{{group_post.key()}}/read" method="post">
-              <input type="submit" class="btn btn-default" value="Mark">
-            </form>
             <div class="post-content">
               {{group_post.post.summary|safe}}
             </div>
