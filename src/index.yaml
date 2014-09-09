@@ -30,3 +30,9 @@ indexes:
   properties:
   - name: group_post
   - name: timestamp
+
+- kind: GroupPostComment
+  properties:
+  - name: group_post
+  - name: timestamp
+    direction: desc

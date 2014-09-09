@@ -1,0 +1,11 @@
+{% for comment in comments.order('timestamp') %}
+  <div class="panel panel-default comment">
+    <div class="panel-body">
+      {{comment.content}}
+    </div>
+    <div class="panel-footer comment-attribution">
+      {{comment.user.nickname()}}
+      <span class="comment-date">{{comment.timestamp}}</span>
+    </div>
+  </div>
+{% endfor %}

@@ -18,6 +18,7 @@
 import os
 import webapp2
 import jinja2
+import time
 from models import *
 from webapp2 import Route
 from google.appengine.api import users
@@ -33,7 +34,11 @@ class GroupPostHandler(webapp2.RequestHandler):
     if group_post is None:
       self.response.write('Could not find post.')
     else:
-      self.response.write(group_post.comments.run())
+      template_values = {
+        'comments': group_post.comments.order('timestamp')
+      }
+      template = JINJA_ENVIRONMENT.get_template('templates/comments.html')
+      self.response.write(template.render(template_values))
 
   def create_comment(self, group_post_id):
     group_post = GroupPost.get(group_post_id)
@@ -43,7 +48,8 @@ class GroupPostHandler(webapp2.RequestHandler):
       content = self.request.get('content')
       user = users.get_current_user()
       GroupPostComment(group_post=group_post, content=content, user=user).put()
-      self.response.write('Comment posted.')
+      time.sleep(0.5)
+      self.get_comments(group_post_id)
 
   def mark_read(self, group_post_id):
     group_post = GroupPost.get(group_post_id)

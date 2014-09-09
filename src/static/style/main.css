@@ -39,9 +39,12 @@ h1 {
   padding: 0;
 }
 
+.post .post-content, .post blockquote {
+  font-size: 15px;
+}
+
 .post .post-content {
   padding: 20px;
-  font-size: 17px;
 }
 
 .panel-heading > div {
@@ -53,8 +56,12 @@ h1 {
 }
 
 .unread .panel-heading {
-  background-color: #F0F0F0 !important;
+  background-color: #DFDFDF !important;
   font-weight: bold;
+}
+
+.selected-post {
+  border: #999 1px solid;
 }
 
 a.post-header-link {
@@ -92,11 +99,19 @@ a.post-header-link {
 
 .post-comments .panel {
   margin-bottom: 10px;
+  border: 1px solid #;
 }
 
 .post-comments .panel-body {
   margin: 10px;
-  font-size: 16px;
+  font-size: 15px;
 }
 
-.post
+.post-comments .panel-footer {
+  font-size: 13px;
+  padding: 3px 5px;
+}
+
+.comment-form {
+  margin: 20px;
+}

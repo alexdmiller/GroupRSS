@@ -51,7 +51,7 @@ class GroupsHandler(webapp2.RequestHandler):
                     name=name,
                     description=description)
       group.put()
-      time.sleep(1)
+      time.sleep(0.5)
       self.redirect('/groups/' + key_name)
     else:
       self.response.write('That group name is already taken.')
@@ -88,7 +88,6 @@ class GroupsHandler(webapp2.RequestHandler):
       group_feed = GroupFeed.gql('WHERE group = :1 AND feed = :2', group.key(),
           feed.key()).get()
       if group_feed is None:
-        print "ADDING GROUP FEED"
         group_feed = GroupFeed(group=group, feed=feed)
         group_feed.put()
         # add currently available posts to group
