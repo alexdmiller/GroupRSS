@@ -7,6 +7,7 @@ class Feed(db.Model):
   site_url = db.StringProperty()
   name = db.StringProperty()
   last_checked = db.DateTimeProperty()
+  last_etag = db.StringProperty()
 
 class Post(db.Model):
   feed = db.ReferenceProperty(Feed, collection_name='posts')  
