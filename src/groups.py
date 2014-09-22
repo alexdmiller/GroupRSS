@@ -61,6 +61,10 @@ class GroupsHandler(webapp2.RequestHandler):
     if group is None:
       self.response.write('No group by that name exists.')
     else:
+      # Check for new posts
+      for group_feed in group.group_feeds:
+        reader = Reader(group_feed.feed)
+        reader.savePosts()
       template_values = {
         'group_key_name': group_key_name,
         'group': group,
