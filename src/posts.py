@@ -52,6 +52,9 @@ class GroupPostHandler(webapp2.RequestHandler):
       comment.put()
       group_post.last_modified = comment.timestamp
       group_post.put()
+      metadata = group_post.user_metadata(user)
+      metadata.last_read = group_post.last_modified
+      metadata.put()
       time.sleep(0.5)
       self.get_comments(group_post_id)
 
