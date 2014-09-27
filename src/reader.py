@@ -43,7 +43,6 @@ class Reader:
         updated_parsed_datetime = datetime.fromtimestamp(
             mktime(self.parsedFeed.feed.updated_parsed))
       # TODO: test that this loop doesn't happen if last_checked < updated
-      # TODO: ask server for last updated before we request all of the posts?
       # TODO: only update last_updated on success
       if (self.feedModel.last_checked is None) or (self.feedModel.last_checked < updated_parsed_datetime):
         post_count = 0
