@@ -7,6 +7,13 @@
     $.post('/posts/' + event.target.id + '/read');
     $(event.target).parent().removeClass('unread');
     $(event.target).parent().addClass('selected-post');
+    
+    var commentStatus =  $(event.target).parent().find('.comment-count');
+    if (commentStatus.hasClass('unread-comments')) {
+      commentStatus.removeClass('unread-comments');
+      commentStatus.addClass('read-comments');
+    }
+
     $.get('/posts/' + event.target.id + '/comments',
         _.partial(onPostsRecieved, event.target.id));
   }

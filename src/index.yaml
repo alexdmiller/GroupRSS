@@ -13,6 +13,12 @@ indexes:
 - kind: GroupPost
   properties:
   - name: group
+  - name: last_modified
+    direction: desc
+
+- kind: GroupPost
+  properties:
+  - name: group
   - name: post
 
 - kind: GroupPost

@@ -60,6 +60,20 @@ h1 {
   font-weight: bold;
 }
 
+.comment-count.unread-comments {
+  background-color: #00D4FF !important;
+}
+
+.comment-count.read-comments {
+  background-color: #FFF !important;
+  border: 1px solid #CCC;
+  color: #999 !important;
+}
+
+.comment-count.no-comments {
+  display: none;
+}
+
 .selected-post {
   border: #999 1px solid;
 }

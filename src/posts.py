@@ -19,6 +19,7 @@ import os
 import webapp2
 import jinja2
 import time
+import datetime
 from models import *
 from webapp2 import Route
 from google.appengine.api import users
@@ -47,7 +48,10 @@ class GroupPostHandler(webapp2.RequestHandler):
     else:
       content = self.request.get('content')
       user = users.get_current_user()
-      GroupPostComment(group_post=group_post, content=content, user=user).put()
+      comment = GroupPostComment(group_post=group_post, content=content, user=user)
+      comment.put()
+      group_post.last_modified = comment.timestamp
+      group_post.put()
       time.sleep(0.5)
       self.get_comments(group_post_id)
 
@@ -56,8 +60,9 @@ class GroupPostHandler(webapp2.RequestHandler):
     metadata = UserPostMetadata.get_from_post(users.get_current_user(),
         group_post)
     metadata.read = True
+    metadata.last_read = datetime.datetime.now()
     metadata.put()
-    self.response.write('Marekd as read: ' + metadata.key().id_or_name())
+    self.response.write('Marked as read: ' + metadata.key().id_or_name())
 
 app = webapp2.WSGIApplication([
     Route(r'/posts/<group_post_id>/comments',

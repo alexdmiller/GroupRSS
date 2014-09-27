@@ -68,7 +68,7 @@ class GroupsHandler(webapp2.RequestHandler):
       template_values = {
         'group_key_name': group_key_name,
         'group': group,
-        'group_posts': group.group_posts.order('-timestamp'),
+        'group_posts': group.group_posts.order('-last_modified'),
         'user': users.get_current_user()
       }
       template = JINJA_ENVIRONMENT.get_template('templates/group.html')
