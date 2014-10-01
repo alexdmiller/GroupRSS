@@ -2,29 +2,7 @@
   $('.posts .panel-body').on('shown.bs.collapse', onPostOpen);
   $('.posts .panel-body').on('hide.bs.collapse', onPostClose);
   $('.posts .comment-submit').on('click', onPostComment);
-  $(document).keydown(function(event) {
-    console.log(event.keyCode);
-    if (event.keyCode == 74) {
-      // Scroll down
-      if ($('.selected-post').length > 0) {
-        var next = $('.selected-post').next();
-        $('.selected-post').find('.post-panel').collapse('toggle');
-        next.find('.post-panel').collapse('toggle');
-      } else {
-        $('.post-panel').first().collapse('toggle');
-      }
-    } else if (event.keyCode == 75) {
-      if ($('.selected-post').length > 0) {
-        var previous = $('.selected-post').prev();
-        $('.selected-post').find('.post-panel').collapse('toggle');
-        previous.find('.post-panel').collapse('toggle');
-      }
-    } else if (event.keyCode == 79) {
-      if ($('.selected-post').length > 0) {
-        window.open($('.selected-post').find('.post-link').attr('href'));
-      }
-    }
-  });
+  $(document).keydown(onKeyDown);
 
   function onPostOpen(event) {
     console.log(event.target);
@@ -65,5 +43,30 @@
 
   function onPostsRecieved(id, posts) {
     $('#' + id).find('.post-comments').html(posts);
+  }
+
+  function onKeyDown(event) {
+    if (!$('input,textarea').is(':focus')) {
+      if (event.keyCode == 74) {
+        // Scroll down
+        if ($('.selected-post').length > 0) {
+          var next = $('.selected-post').next();
+          $('.selected-post').find('.post-panel').collapse('toggle');
+          next.find('.post-panel').collapse('toggle');
+        } else {
+          $('.post-panel').first().collapse('toggle');
+        }
+      } else if (event.keyCode == 75) {
+        if ($('.selected-post').length > 0) {
+          var previous = $('.selected-post').prev();
+          $('.selected-post').find('.post-panel').collapse('toggle');
+          previous.find('.post-panel').collapse('toggle');
+        }
+      } else if (event.keyCode == 79) {
+        if ($('.selected-post').length > 0) {
+          window.open($('.selected-post').find('.post-link').attr('href'));
+        }
+      }
+    }
   }
 })();
