@@ -17,6 +17,10 @@ handlers:
   script: posts.app
   login: required
 
+- url: /feeds.*
+  script: feeds.app
+  login: required
+
 - url: /static
   static_dir: static
 

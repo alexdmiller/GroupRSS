@@ -12,7 +12,7 @@
             {% for group_feed in group.group_feeds %}
             <div>
               <a href="{{group_feed.feed.site_url}}">{{group_feed.feed.displayable_name()}}</a>
-              {{group_feed.feed.get_status_level()}}
+              <a href="/feed/{{group_feed.feed.key()}}">info</a> {{group_feed.feed.get_status_level()}}
             </div>
             {% endfor %}
           </div>
