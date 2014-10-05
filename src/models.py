@@ -1,15 +1,38 @@
 from google.appengine.ext import db
+from datetime import datetime
 
 class Feed(db.Model):
+  OK = 'OK'
+  WARNING = 'Warning'
+  FATAL_ERROR = 'Fatal error'
+
   # RSS url
   url = db.StringProperty()
   # Actual site url
   site_url = db.StringProperty()
   name = db.StringProperty()
+
+  # Information on the latest attempt to request feed
   last_attempted_check = db.DateTimeProperty()
-  last_attempted_check_status = db.DateTimeProperty()
+  last_attempted_check_status = db.StringProperty()
+  last_attempted_check_status_level = db.StringProperty()
+
   last_successful_check = db.DateTimeProperty()
   last_etag = db.StringProperty()
+
+  def displayable_name(self):
+    if self.name is not None:
+      return self.name
+    else:
+      return self.url
+
+  def get_status_level(self):
+    return self.last_attempted_check_status_level
+
+  def set_status(self, level, message):
+    self.last_attempted_check = datetime.now()
+    self.last_attempted_check_status = str(message)
+    self.last_attempted_check_status_level = level
 
 class Post(db.Model):
   feed = db.ReferenceProperty(Feed, collection_name='posts')  

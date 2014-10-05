@@ -63,8 +63,8 @@ class GroupsHandler(webapp2.RequestHandler):
     else:
       # Check for new posts
       for group_feed in group.group_feeds:
-        reader = Reader(group_feed.feed)
-        reader.savePosts()
+        reader = Reader.create(group_feed.feed)
+        reader.refresh()
       template_values = {
         'group_key_name': group_key_name,
         'group': group,
@@ -85,9 +85,8 @@ class GroupsHandler(webapp2.RequestHandler):
         feed = Feed(key_name=feed_url,
                     url=feed_url)
         feed.put()
-        reader = Reader(feed)
-        reader.saveMetadata()
-        reader.savePosts()
+        reader = Reader.create(feed)
+        reader.refresh()
 
       group_feed = GroupFeed.gql('WHERE group = :1 AND feed = :2', group.key(),
           feed.key()).get()
