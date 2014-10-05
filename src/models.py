@@ -6,7 +6,9 @@ class Feed(db.Model):
   # Actual site url
   site_url = db.StringProperty()
   name = db.StringProperty()
-  last_checked = db.DateTimeProperty()
+  last_attempted_check = db.DateTimeProperty()
+  last_attempted_check_status = db.DateTimeProperty()
+  last_successful_check = db.DateTimeProperty()
   last_etag = db.StringProperty()
 
 class Post(db.Model):

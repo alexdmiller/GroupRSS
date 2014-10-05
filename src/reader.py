@@ -13,38 +13,52 @@ class Reader:
     self.feedModel = feedModel
     self.parsedFeed = None
 
-  def fetchFeed(self):
-    if self.feedModel.last_checked and (datetime.now() - self.feedModel.last_checked) < timedelta(minutes = Reader.MIN_UPADTE_INTERVAL_MINUTES):
-      logging.info("Did not fetch feed %s because it was checked in the last %s minutes.", self.feedModel.url, Reader.MIN_UPADTE_INTERVAL_MINUTES)
-      return
-    if self.parsedFeed is None:
-      if self.feedModel.last_checked:
-        parsed = feedparser.parse(self.feedModel.url, etag=self.feedModel.last_etag,
-            modified=self.feedModel.last_checked)
-        if parsed.status is 200:
-          self.parsedFeed = parsed
-        else:
-          logging.info("Feed %s did not return status 200 when requested; not updating.", self.feedModel.url)
-      else:
-        logging.info("Fetching feed %s", self.feedModel.url)
-        self.parsedFeed = feedparser.parse(self.feedModel.url)
+  def getFeed(self):
+    # Already cached?
+    if self.parsedFeed:
+      return self.parsedFeed
 
-  def saveMetadata(self):
-    self.fetchFeed()
-    self.feedModel.name = self.parsedFeed.feed.title
-    self.feedModel.site_url = self.parsedFeed.feed.link
+    self.feedModel.last_attempted_check = datetime.now()
+
+    # Checking too often?
+    if self.feedModel.last_successful_check and (datetime.now() - self.feedModel.last_successful_check) < timedelta(minutes = Reader.MIN_UPADTE_INTERVAL_MINUTES):
+      logging.info("Did not fetch feed %s because it was checked in the last %s minutes.", self.feedModel.url, Reader.MIN_UPADTE_INTERVAL_MINUTES)
+      self.feedModel.last_attempted_check_status = "Requesting feed too often."
+      self.feedModel.put()
+      return None
+
+    # Make HTTP request
+    logging.info("Fetching feed %s", self.feedModel.url)
+    parsedFeed = None
+    if self.feedModel.last_successful_check:
+      parsedFeed = feedparser.parse(self.feedModel.url, etag=self.feedModel.last_etag,
+          modified=self.feedModel.last_successful_check)
+    else:
+      parsedFeed = fe
+
+
+  def saveMetadata(self, feed):
+    self.feedModel.name = parsedFeed.feed.title
+    self.feedModel.site_url = parsedFeed.feed.link
     self.feedModel.put()
 
-  def savePosts(self):
-    self.fetchFeed()
-    if self.parsedFeed:
+  def savePosts(self, feed):
+    # TODO: Move code
+
+  def refreshFeed(self):
+    feed = self.fetchFeed()
+
+    if feed:
+      self.saveMetadata(feed)
+      self.savePosts(feed)
+
       updated_parsed_datetime = None
       if self.parsedFeed.feed.updated_parsed:
         updated_parsed_datetime = datetime.fromtimestamp(
             mktime(self.parsedFeed.feed.updated_parsed))
       # TODO: test that this loop doesn't happen if last_checked < updated
       # TODO: only update last_updated on success
-      if (self.feedModel.last_checked is None) or (self.feedModel.last_checked < updated_parsed_datetime):
+      if (self.feedModel.last_successful_check is None) or (self.feedModel.last_successful_check < updated_parsed_datetime):
         post_count = 0
         for entry in self.parsedFeed.entries:
           post = Post.get_by_key_name(entry.link)
@@ -60,10 +74,10 @@ class Reader:
             post_count += 1
             self.createGroupPost(post, self.feedModel);
         logging.info("Added %s posts to feed %s", post_count, self.feedModel.url)
-      self.feedModel.last_checked = datetime.now()
-      if hasattr(self.parsedFeed, 'etag'):
-        self.feedModel.last_etag = self.parsedFeed.etag
-      self.feedModel.put()
+    self.feedModel.last_successful_check = datetime.now()
+    if hasattr(self.parsedFeed, 'etag'):
+      self.feedModel.last_etag = self.parsedFeed.etag
+    self.feedModel.put()
 
   def createGroupPost(self, post, feed):
     for feed_group in feed.feed_groups:
