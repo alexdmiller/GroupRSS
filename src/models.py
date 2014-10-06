@@ -29,6 +29,12 @@ class Feed(db.Model):
   def get_status_level(self):
     return self.last_attempted_check_status_level
 
+  def get_status_badge_class(self):
+    if self.get_status_level() == Feed.OK:
+      return 'label-success'
+    else:
+      return 'label-danger'
+
   def set_status(self, level, message):
     self.last_attempted_check = datetime.now()
     self.last_attempted_check_status = str(message)

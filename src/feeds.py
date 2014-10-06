@@ -42,5 +42,5 @@ class FeedsHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     Route(r'/feeds/<feed_key_name>', handler=FeedsHandler, handler_method='get_feed_info',
-        methods=['GET'])
+      methods=['GET'])
 ], debug=True)

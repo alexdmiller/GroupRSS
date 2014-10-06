@@ -1,3 +1,19 @@
-Feed
-{{feed.name}}
-{{feed.url}}
+<dl>
+  <dt>Name</dt>
+  <dd>{{feed.name}}</dd>
+
+  <dt>Feed URL</dt>
+  <dd><a href="{{feed.url}}">{{feed.url}}</a></dd>
+
+  <dt>Site URL</dt>
+  <dd><a href="{{feed.site_url}}">{{feed.site_url}}</a></dd>
+
+  <dt>Last attempted check</dt>
+  <dd>{{feed.last_attempted_check}}</dd>
+
+  <dt>Last successful check</dt>
+  <dd>{{feed.last_successful_check}}</dd>
+
+  <dt>Current status</dt>
+  <dd>{{feed.last_attempted_check_status_level}}: {{feed.last_attempted_check_status}}</dd>
+</dl>

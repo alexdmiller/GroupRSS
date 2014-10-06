@@ -48,7 +48,7 @@ class Reader:
     status_level = None
     if hasattr(parsed_feed, 'status'):
       status = parsed_feed.status
-      if status is 200 or status is 304:
+      if status == 200 or status == 304:
         status_level = Feed.OK
       else:
         status_level = Feed.FATAL_ERROR

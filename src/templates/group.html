@@ -5,21 +5,21 @@
   </div>
 
   <div class="row">
-    <div class="sidebar col-md-2">
+    <div class="sidebar col-md-3">
       <div class="feed-info panel panel-default">
         <div class="panel-body">
-          <div class="feed-list">
+          <ul class="list-group feed-list">
             {% for group_feed in group.group_feeds %}
-            <div>
-              <a href="{{group_feed.feed.site_url}}">{{group_feed.feed.displayable_name()}}</a>
-              <a href="/feed/{{group_feed.feed.key()}}">info</a> {{group_feed.feed.get_status_level()}}
-            </div>
+            <li class="list-group-item">
+              <a href="/feeds/{{group_feed.feed.key()}}">{{group_feed.feed.displayable_name()}}</a> <br>
+              <span class="label {{group_feed.feed.get_status_badge_class()}}">{{group_feed.feed.get_status_level()}}</span>
+            </li>
             {% endfor %}
-          </div>
-          <div class="add-feed">
+          </ul>
+          <div class="add-feed form-inline">
             <form action="/groups/{{group_key_name}}/add_feed" method="post">
-              <div><input type="text" name="url"></div>
-              <div><input type="submit" value="Add Feed"></div>
+              <input class="comment-content form-control" type="text" name="url">
+              <input class="comment-submit btn btn-default" type="submit" value="Add Feed">
             </form>
           </div>
         </div>
@@ -56,8 +56,8 @@
               Loading.
             </div>
             <div class="comment-form">
-              <div><textarea class="comment-content form-control"></textarea></div>
-              <div><button class="comment-submit btn btn-default" value="Post Comment">Post</div>
+              <textarea class="comment-content form-control"></textarea>
+              <button class="comment-submit btn btn-default" value="Post Comment">Post</button>
             </div>
           </div>
         </div>
