@@ -1,5 +1,8 @@
 {% extends "templates/base.html" %}
 {% block content %}
+  <script type="text/javascript">
+    GROUP_KEY_NAME = '{{group_key_name}}';
+  </script>
   <div class="group-header row">
     <h2 class="col-md-12">{{group.name}} <span class="group-description">{{group.description}}</span></h2>
   </div>
@@ -33,42 +36,25 @@
       </div>
     </div>
 
-    <div class="posts col-md-8 panel-group" id="post-accordion">
-      {% for group_post in group_posts %}
-        <div class="post panel panel-default {{'unread' if not group_post.user_metadata(user).read}}">
-          <div class="panel-heading"
-              data-toggle="collapse" data-parent="#post-accordion" href="#{{group_post.key()}}">
-            <div class="feed-name">
-              {{group_post.post.feed.name}}
-            </div>
-            <div class="post-info">
-              <span class="badge comment-count {{group_post.comment_status_class(user)}}">{{group_post.comments.count()}}</span>
-            </div>
-            <div class="post-title">
-              {{group_post.post.title}}
-            </div>
-          </div>
-          <div class="post-panel panel-body panel-collapse collapse" id="{{group_post.key()}}">
-            <div class="post-extra-info">
-              <h3><a class="post-link" target="_blank" href="{{group_post.post.url}}">{{group_post.post.title}}</a></h3>
-              <span><a href="{{group_post.post.feed.url}}">{{group_post.post.feed.name}}</a></span>
-              <span class="date">{{group_post.post.timestamp}}</span>
-              <span class="date">{{group_post.last_modified}}</span>
-            </div>
-            <div class="post-content">
-              {{group_post.post.summary|safe}}
-            </div>
-
-            <div class="post-comments">
-              Loading.
-            </div>
-            <div class="comment-form">
-              <textarea class="comment-content form-control"></textarea>
-              <button class="comment-submit btn btn-default" value="Post Comment">Post</button>
-            </div>
-          </div>
+    <div class="col-md-6">
+      <div class="posts panel-group" id="post-accordion">
+      </div>
+      <div class="post-loading-indicator">
+        <div class="loader-icon">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+             width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+          <path fill="#000" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
+            <animateTransform attributeType="xml"
+              attributeName="transform"
+              type="rotate"
+              from="0 25 25"
+              to="360 25 25"
+              dur="0.6s"
+              repeatCount="indefinite"/>
+            </path>
+          </svg>
         </div>
-      {% endfor %}
+      </div>
     </div>
   </div>
 {% endblock %}

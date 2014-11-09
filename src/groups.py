@@ -32,6 +32,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class GroupsHandler(webapp2.RequestHandler):
+  PAGE_SIZE = 5
+
   def get_group_list(self):
     groups_query = Group.all()
     template_values = {
@@ -68,10 +70,22 @@ class GroupsHandler(webapp2.RequestHandler):
       template_values = {
         'group_key_name': group_key_name,
         'group': group,
-        'group_posts': group.group_posts.order('-last_modified'),
         'user': users.get_current_user()
       }
       template = JINJA_ENVIRONMENT.get_template('templates/group.html')
+      self.response.write(template.render(template_values))
+
+  def get_group_posts(self, group_key_name, page):
+    offset = (int(page) - 1) * GroupsHandler.PAGE_SIZE
+    group = Group.get_by_key_name(group_key_name);
+    if group is None:
+      self.response.write('No group by that name exists.')
+    else:
+      template_values = {
+        'group_posts': group.group_posts.order('-last_modified').run(limit=GroupsHandler.PAGE_SIZE, offset=offset),
+        'user': users.get_current_user()
+      }
+      template = JINJA_ENVIRONMENT.get_template('templates/posts.html')
       self.response.write(template.render(template_values))
 
   def add_feed_to_group(self, group_key_name):
@@ -106,6 +120,8 @@ app = webapp2.WSGIApplication([
         methods=['POST']),
     Route(r'/groups/<group_key_name>', handler=GroupsHandler,
         handler_method='get_group'),
+    Route(r'/groups/<group_key_name>/posts/<page>', handler=GroupsHandler,
+        handler_method='get_group_posts'),
     Route(r'/groups/<group_key_name>/add_feed', handler=GroupsHandler,
         handler_method='add_feed_to_group'),
 ], debug=True)

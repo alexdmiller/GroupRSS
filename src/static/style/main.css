@@ -1,5 +1,5 @@
 body {
-  font-family: helvetica;
+  font-family: "helvetica neue", helvetica, sans-serif;
   margin: 0 ;
 }
 
@@ -50,6 +50,9 @@ h1 {
 
 .post .post-content {
   padding: 20px;
+  font-family: georgia, serif;
+  font-size: 16px;
+  line-height: 30px;
 }
 
 .panel-heading > div {
@@ -117,6 +120,11 @@ a.post-header-link {
 
 .post-extra-info span {
   margin-right: 20px;
+}
+
+.post-loading-indicator {
+  text-align: center;
+  height: 200px;
 }
 
 /* Comments */

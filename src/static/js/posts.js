@@ -1,11 +1,64 @@
 (function() {
-  $('.posts .panel-body').on('shown.bs.collapse', onPostOpen);
-  $('.posts .panel-body').on('hide.bs.collapse', onPostClose);
-  $('.posts .comment-submit').on('click', onPostComment);
-  $(document).keydown(onKeyDown);
+  $(document).ready(function() {
+    $(document).keydown(onKeyDown);
+    $(window).scroll(_.throttle(retrievePostsIfScrolledToBottom, 1000));
+    // Populate with first posts.
+    retrievePostsIfScrolledToBottom();
+  });
+
+
+  // Indicates whether an AJAX call is being made.
+  var currentlyRetrievingPosts = false;
+
+  // Set to true when the server returns an empty page of posts.
+  var noMorePages = false;
+
+  // The index of the most recently retrieved page.
+  var latestPageRetrieved = 0;
+
+  function retrievePostsIfScrolledToBottom() {
+    var windowScroll = $(window).scrollTop();
+    var windowHeight = $(window).height();
+    var bottomElementPosition = $('.post-loading-indicator').offset().top;
+    if (bottomElementPosition >= windowScroll &&
+        bottomElementPosition <= windowScroll + windowHeight) {
+      getPosts(latestPageRetrieved + 1);
+    }
+  }
+
+  function getPosts(page) {
+    if (!currentlyRetrievingPosts && !noMorePages) {
+      $('.post-loading-indicator .loader-icon').show();
+      currentlyRetrievingPosts = true;
+      $.get('/groups/' + GROUP_KEY_NAME + '/posts/' + page, onPostsReceived);      
+    }
+  }
+
+  function onPostsReceived(event) {
+    currentlyRetrievingPosts = false;
+    latestPageRetrieved++;
+    if (event == '') {
+      noMorePages = true;
+      $('.post-loading-indicator').html("That's all!");
+    } else {
+      $('.posts').append(event);
+      $('.post-loading-indicator .loader-icon').hide();
+
+      // Add event listeners to newly appended post elements.
+      $('.posts .panel-body').off('shown.bs.collapse');
+      $('.posts .panel-body').off('hide.bs.collapse');
+      $('.posts .comment-submit').off('click');
+      $('.posts .panel-body').on('shown.bs.collapse', onPostOpen);
+      $('.posts .panel-body').on('hide.bs.collapse', onPostClose);
+      $('.posts .comment-submit').on('click', onPostComment);
+
+      // If we still haven't filled up the screen, get more posts.
+      retrievePostsIfScrolledToBottom();
+    }
+  }
+
 
   function onPostOpen(event) {
-    console.log(event.target);
     $.post('/posts/' + event.target.id + '/read');
     $(event.target).parent().removeClass('unread');
     $(event.target).parent().addClass('selected-post');
@@ -17,7 +70,7 @@
     }
 
     $.get('/posts/' + event.target.id + '/comments',
-        _.partial(onPostsRecieved, event.target.id));
+        _.partial(onCommentsRecieved, event.target.id));
     $('html,body').animate({
       scrollTop: $(event.target).parent().offset().top - 10
     });
@@ -32,16 +85,17 @@
     var id = postBody.attr('id');
     var textarea = postBody.find('.comment-content');
     textarea.attr('disabled', true);
+    console.log(id);
     $.post('/posts/' + id + '/comments', {
       content: textarea.val()
     }, function(posts) {
       textarea.val('');
       textarea.attr('disabled', false);
-      onPostsRecieved(id, posts);
+      onCommentsRecieved(id, posts);
     });
   }
 
-  function onPostsRecieved(id, posts) {
+  function onCommentsRecieved(id, posts) {
     $('#' + id).find('.post-comments').html(posts);
   }
 
