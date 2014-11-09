@@ -45,9 +45,11 @@
       $('.post-loading-indicator .loader-icon').hide();
 
       // Add event listeners to newly appended post elements.
+      $('.posts .panel-body').off('show.bs.collapse');
       $('.posts .panel-body').off('shown.bs.collapse');
       $('.posts .panel-body').off('hide.bs.collapse');
       $('.posts .comment-submit').off('click');
+      $('.posts .panel-body').on('show.bs.collapse', prePostOpen);
       $('.posts .panel-body').on('shown.bs.collapse', onPostOpen);
       $('.posts .panel-body').on('hide.bs.collapse', onPostClose);
       $('.posts .comment-submit').on('click', onPostComment);
@@ -57,12 +59,13 @@
     }
   }
 
-
-  function onPostOpen(event) {
+  function prePostOpen(event) {
     $.post('/posts/' + event.target.id + '/read');
     $(event.target).parent().removeClass('unread');
     $(event.target).parent().addClass('selected-post');
-    
+  }
+
+  function onPostOpen(event) {
     var commentStatus =  $(event.target).parent().find('.comment-count');
     if (commentStatus.hasClass('unread-comments')) {
       commentStatus.removeClass('unread-comments');
@@ -111,6 +114,7 @@
           $('.post-panel').first().collapse('toggle');
         }
       } else if (event.keyCode == 75) {
+        // Scroll up
         if ($('.selected-post').length > 0) {
           var previous = $('.selected-post').prev();
           $('.selected-post').find('.post-panel').collapse('toggle');
