@@ -13,6 +13,7 @@
             <li class="list-group-item">
               <a href="/feeds/{{group_feed.feed.key()}}">{{group_feed.feed.displayable_name()}}</a> <br>
               <span class="label {{group_feed.feed.get_status_badge_class()}}">{{group_feed.feed.get_status_level()}}</span>
+              <span style="color: #CCC">Last success: {{group_feed.feed.last_successful_check}}</span>
             </li>
             {% endfor %}
           </ul>
@@ -22,6 +23,12 @@
               <input class="comment-submit btn btn-default" type="submit" value="Add Feed">
             </form>
           </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          Tip: Press 'j/k' to navigate to next/previous post. Press 'o' to open the full post in a new window.
         </div>
       </div>
     </div>

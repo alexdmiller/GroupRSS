@@ -7,6 +7,9 @@ from models import *
 import logging
 import httplib, urllib2, urlparse
 
+
+feedparser._HTMLSanitizer.acceptable_elements.add("iframe")
+
 class Reader:
   MIN_UPADTE_INTERVAL_MINUTES = 1
 
@@ -82,6 +85,7 @@ class Reader:
       post = Post.get_by_key_name(entry.link)
       if post is None:
         timestamp = datetime.fromtimestamp(mktime(entry.published_parsed))
+        print entry.summary
         post = Post(key_name=entry.link,
                     feed=self.feed_model,
                     url=entry.link,

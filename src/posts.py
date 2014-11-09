@@ -63,7 +63,7 @@ class GroupPostHandler(webapp2.RequestHandler):
     metadata = UserPostMetadata.get_from_post(users.get_current_user(),
         group_post)
     metadata.read = True
-    metadata.last_read = datetime.datetime.now()
+    metadata.last_read = datetime.now()
     metadata.put()
     self.response.write('Marked as read: ' + metadata.key().id_or_name())
 
